@@ -24,9 +24,7 @@ pipeline {
             steps {
                 echo 'Code checkout step'
                 checkout scm
-            }
 
-            steps {
                 echo 'NuGet restore step'
                 bat 'dotnet restore'
             }
