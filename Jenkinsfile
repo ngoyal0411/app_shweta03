@@ -11,6 +11,7 @@ pipeline {
         cluster_name = 'dotnet-api'
         location = 'us-central1-c'
         credentials_id = 'GCP_SampleAPI'
+        namespace = 'kubernetes-cluster-shweta03'
         container_id = "${bat(script:'docker ps -q --filter name=c-shweta03-master', returnStdout: true).trim().readLines().drop(1).join('')}"
     }
 
@@ -105,8 +106,8 @@ pipeline {
         stage('Kubernetes deployment') {
             steps {
                 echo 'Kubernetes deployment step'
-                step([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, manifestPattern: 'deployment.yaml', credentialsId: env.credentials_id, verifyDeployments: true])
-                step([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, manifestPattern: 'service.yaml', credentialsId: env.credentials_id, verifyDeployments: false])
+                step([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, namespace: env.namespace, manifestPattern: 'deployment.yaml', credentialsId: env.credentials_id, verifyDeployments: true])
+                step([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, namespace: env.namespace, manifestPattern: 'service.yaml', credentialsId: env.credentials_id, verifyDeployments: false])
             }
         }
     }
