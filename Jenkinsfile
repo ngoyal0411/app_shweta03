@@ -62,7 +62,7 @@ pipeline {
             steps {
                 echo 'Docker image step'
                 bat 'dotnet publish -c Release'
-                bat "docker build -t i-${username}-${branch_name}:${BUILD_NUMBER} --no-cache -f Dockerfile ."
+                bat "docker build -t i-${username}-${branch_name} --no-cache -f Dockerfile ."
             }
         }
 
@@ -83,8 +83,8 @@ pipeline {
                 stage('PushToDockerHub') {
                     steps {
                         echo 'Push docker image to docker hub step'
-                        bat "docker tag i-${username}-${branch_name}:${BUILD_NUMBER} shweyasingh/i-${username}-${branch_name}:${BUILD_NUMBER}"
-                        bat "docker tag i-${username}-${branch_name}:${BUILD_NUMBER} shweyasingh/i-${username}-${branch_name}:latest"
+                        bat "docker tag i-${username}-${branch_name} shweyasingh/i-${username}-${branch_name}:${BUILD_NUMBER}"
+                        bat "docker tag i-${username}-${branch_name} shweyasingh/i-${username}-${branch_name}:latest"
 
                         withDockerRegistry([credentialsId: 'DockerHub', url: '']) {
                             bat "docker push shweyasingh/i-${username}-${branch_name}:${BUILD_NUMBER}"
