@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         scannerHome = tool name : 'sonar_scanner_dotnet'
-        registry = 'shweyasingh/app-shweta03'
+        registry = 'shweyasingh/i-shweta03-master'
         branch_name = 'master'
         docker_port = 7200
         username = 'shweta03'
@@ -87,8 +87,8 @@ pipeline {
                         bat "docker tag i-${username}-${branch_name}:${BUILD_NUMBER} shweyasingh/i-${username}-${branch_name}:latest"
 
                         withDockerRegistry([credentialsId: 'DockerHub', url: '']) {
-                            bat "docker push i-${username}-${branch_name}:${BUILD_NUMBER}"
-                            bat "docker push i-${username}-${branch_name}:latest"
+                            bat "docker push shweyasingh/i-${username}-${branch_name}:${BUILD_NUMBER}"
+                            bat "docker push shweyasingh/i-${username}-${branch_name}:latest"
                         }
                     }
                 }
@@ -98,7 +98,7 @@ pipeline {
         stage('Docker deployment') {
             steps {
                 echo 'Docker deployment step'
-                bat "docker run --name c-${username}-${branch_name} -d -p ${docker_port}:80 i-${username}-${branch_name}:${BUILD_NUMBER}"
+                bat "docker run --name c-${username}-${branch_name} -d -p ${docker_port}:80 shweyasingh/i-${username}-${branch_name}:${BUILD_NUMBER}"
             }
         }
 
