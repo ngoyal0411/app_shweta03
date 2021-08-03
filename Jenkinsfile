@@ -20,21 +20,19 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('NuGet restore') {
             steps {
                 echo 'Code checkout step'
                 checkout scm
             }
-        }
 
-        stage('Restore NuGet Packages') {
             steps {
                 echo 'NuGet restore step'
                 bat 'dotnet restore'
             }
         }
 
-        stage('Start SonarQube Analysis') {
+        stage('Start sonarQube analysis') {
             steps {
                 echo 'Start sonarqube analysis step'
                 withSonarQubeEnv('Test_Sonar') {
@@ -53,7 +51,7 @@ pipeline {
             }
         }
 
-        stage('Stop SonarQube Analysis') {
+        stage('Stop sonarQube analysis') {
             steps {
                 echo 'Stop sonarqube analysis step'
                 withSonarQubeEnv('Test_Sonar') {
@@ -62,7 +60,7 @@ pipeline {
             }
         }
 
-        stage('Create Docker Image') {
+        stage('Docker Image') {
             steps {
                 echo 'Docker image step'
                 bat 'dotnet publish -c Release'
@@ -72,7 +70,7 @@ pipeline {
 
         stage('Containers') {
             parallel {
-                stage('PreContainer Check') {
+                stage('PreContainerCheck') {
                     steps {
                         echo 'Pre container check'
                         script {
@@ -84,11 +82,11 @@ pipeline {
                     }
                 }
 
-                stage('Push to DTR') {
+                stage('PushToDockerHub') {
                     steps {
                         echo 'Push docker image to docker hub step'
-                        bat "docker tag i-${username}-${branch_name}:${BUILD_NUMBER} i-${username}-${branch_name}:${BUILD_NUMBER}"
-                        bat "docker tag i-${username}-${branch_name}:${BUILD_NUMBER} i-${username}-${branch_name}:latest"
+                        bat "docker tag i-${username}-${branch_name}:${BUILD_NUMBER} shweyasingh/i-${username}-${branch_name}:${BUILD_NUMBER}"
+                        bat "docker tag i-${username}-${branch_name}:${BUILD_NUMBER} shweyasingh/i-${username}-${branch_name}:latest"
 
                         withDockerRegistry([credentialsId: 'DockerHub', url: '']) {
                             bat "docker push i-${username}-${branch_name}:${BUILD_NUMBER}"
@@ -99,16 +97,16 @@ pipeline {
             }
         }
 
-        stage('Docker Deployment') {
+        stage('Docker deployment') {
             steps {
                 echo 'Docker deployment step'
                 bat "docker run --name c-${username}-${branch_name} -d -p ${docker_port}:80 i-${username}-${branch_name}:${BUILD_NUMBER}"
             }
         }
 
-        stage('GKE Deployment') {
+        stage('Kubernetes deployment') {
             steps {
-                echo 'GKE deployment step'
+                echo 'Kubernetes deployment step'
                 step([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, manifestPattern: 'k8s/deployment.yaml', credentialsId: env.credentials_id, verifyDeployments: true])
                 step([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, manifestPattern: 'k8s/service.yaml', credentialsId: env.credentials_id, verifyDeployments: false])
             }
