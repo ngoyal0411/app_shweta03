@@ -4,7 +4,6 @@ pipeline {
     environment {
         scannerHome = tool name : 'sonar_scanner_dotnet'
         registry = 'shweyasingh/i-shweta03-master'
-        branch_name = 'master'
         docker_port = 7200
         username = 'shweta03'
         project_id = 'sampleapi-321108'
@@ -63,7 +62,7 @@ pipeline {
             steps {
                 echo 'Docker image step'
                 bat 'dotnet publish -c Release'
-                bat "docker build -t i-${username}-${branch_name} --no-cache -f Dockerfile ."
+                bat "docker build -t i-${username}-${BRANCH_NAME} --no-cache -f Dockerfile ."
             }
         }
 
@@ -75,7 +74,7 @@ pipeline {
                         script {
                             if (env.container_id != null) {
                                 echo 'Stop and remove existing container'
-                                bat "docker stop c-${username}-${branch_name} && docker rm c-${username}-${branch_name}"
+                                bat "docker stop c-${username}-${BRANCH_NAME} && docker rm c-${username}-${BRANCH_NAME}"
                             }
                         }
                     }
@@ -84,12 +83,12 @@ pipeline {
                 stage('PushToDockerHub') {
                     steps {
                         echo 'Push docker image to docker hub step'
-                        bat "docker tag i-${username}-${branch_name} shweyasingh/i-${username}-${branch_name}:${BUILD_NUMBER}"
-                        bat "docker tag i-${username}-${branch_name} shweyasingh/i-${username}-${branch_name}:latest"
+                        bat "docker tag i-${username}-${BRANCH_NAME} shweyasingh/i-${username}-${BRANCH_NAME}:${BUILD_NUMBER}"
+                        bat "docker tag i-${username}-${BRANCH_NAME} shweyasingh/i-${username}-${BRANCH_NAME}:latest"
 
                         withDockerRegistry([credentialsId: 'DockerHub', url: '']) {
-                            bat "docker push shweyasingh/i-${username}-${branch_name}:${BUILD_NUMBER}"
-                            bat "docker push shweyasingh/i-${username}-${branch_name}:latest"
+                            bat "docker push shweyasingh/i-${username}-${BRANCH_NAME}:${BUILD_NUMBER}"
+                            bat "docker push shweyasingh/i-${username}-${BRANCH_NAME}:latest"
                         }
                     }
                 }
@@ -99,7 +98,7 @@ pipeline {
         stage('Docker deployment') {
             steps {
                 echo 'Docker deployment step'
-                bat "docker run --name c-${username}-${branch_name} -d -p ${docker_port}:80 shweyasingh/i-${username}-${branch_name}:${BUILD_NUMBER}"
+                bat "docker run --name c-${username}-${BRANCH_NAME} -d -p ${docker_port}:80 shweyasingh/i-${username}-${BRANCH_NAME}:${BUILD_NUMBER}"
             }
         }
 
