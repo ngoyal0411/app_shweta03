@@ -23,6 +23,9 @@ pipeline {
         }
 
         stage('Start sonarQube analysis') {
+            when {
+                branch 'master'
+            }
             steps {
                 echo 'Start sonarqube analysis step'
                 withSonarQubeEnv('Test_Sonar') {
@@ -42,11 +45,24 @@ pipeline {
         }
 
         stage('Stop sonarQube analysis') {
+            when {
+                branch 'master'
+            }
             steps {
                 echo 'Stop sonarqube analysis step'
                 withSonarQubeEnv('Test_Sonar') {
                     bat "${scannerHome}\\SonarScanner.MSBuild.exe end"
                 }
+            }
+        }
+
+        stage('Release artifact') {
+            when {
+                branch 'develop'
+            }
+            steps {
+                echo 'Release artifact step'
+                bat 'dotnet publish -c Release'
             }
         }
 
