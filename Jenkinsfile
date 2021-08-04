@@ -3,15 +3,12 @@ pipeline {
 
     environment {
         scannerHome = tool name : 'sonar_scanner_dotnet'
-        registry = 'shweyasingh/i-shweta03-master'
-        docker_port = 7200
         username = 'shweta03'
         project_id = 'sampleapi-321108'
         cluster_name = 'dotnet-api'
         location = 'us-central1-c'
         credentials_id = 'GCP_SampleAPI'
         namespace = 'kubernetes-cluster-shweta03'
-        container_id = "${bat(script:'docker ps -q --filter name=c-shweta03-master', returnStdout: true).trim().readLines().drop(1).join('')}"
     }
 
     options {
@@ -72,9 +69,17 @@ pipeline {
                     steps {
                         echo 'Pre container check'
                         script {
-                            if (env.container_id != null) {
-                                echo 'Stop and remove existing container'
+                            if (env.BRANCH_NAME == 'master') {
+                                env.docker_port = 7200
+                            } else {
+                                env.docker_port = 7300
+                            }
+
+                            try {
                                 bat "docker stop c-${username}-${BRANCH_NAME} && docker rm c-${username}-${BRANCH_NAME}"
+                            }
+                            catch (exc) {
+                                echo 'No such container exist.'
                             }
                         }
                     }
