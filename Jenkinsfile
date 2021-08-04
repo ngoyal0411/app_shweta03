@@ -4,11 +4,6 @@ pipeline {
     environment {
         scannerHome = tool name : 'sonar_scanner_dotnet'
         username = 'shweta03'
-        project_id = 'sampleapi-321108'
-        cluster_name = 'dotnet-api'
-        location = 'us-central1-c'
-        credentials_id = 'GCP_SampleAPI'
-        namespace = 'kubernetes-cluster-shweta03'
     }
 
     options {
@@ -110,8 +105,10 @@ pipeline {
         stage('Kubernetes deployment') {
             steps {
                 echo 'Kubernetes deployment step'
-                step([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, namespace: env.namespace, manifestPattern: 'k8s/deployment.yaml', credentialsId: env.credentials_id, verifyDeployments: true])
-                step([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, namespace: env.namespace, manifestPattern: 'k8s/service.yaml', credentialsId: env.credentials_id, verifyDeployments: false])
+                // step([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, namespace: env.namespace, manifestPattern: 'k8s/deployment.yaml', credentialsId: env.credentials_id, verifyDeployments: true])
+                // step([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, namespace: env.namespace, manifestPattern: 'k8s/service.yaml', credentialsId: env.credentials_id, verifyDeployments: false])
+                bat 'kubectl apply -f k8s/deployment.yaml'
+                bat 'kubectl apply -f k8s/service.yaml'
             }
         }
     }
