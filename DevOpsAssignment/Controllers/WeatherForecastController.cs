@@ -27,7 +27,7 @@ namespace DevOpsAssignment.Controllers
         public string GetMessage()
         {
             _logger.LogInformation("Calling GetMessage method.");
-            return "Message from master branch";
+            return "Message from develop branch";
         }
 
         [Route("weather")]
