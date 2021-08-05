@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dotnet-api-deployment-master
+  name: dotnet-api-deployment-develop
   namespace: kubernetes-cluster-shweta03
   labels:
-    app: dotnet-api-master
+    app: dotnet-api-develop
 spec:
   replicas: 4
   selector:
     matchLabels:
-      app: dotnet-api-master
+      app: dotnet-api-develop
   template:
     metadata:
       labels:
-        app: dotnet-api-master
+        app: dotnet-api-develop
     spec:
       containers:
-        - name: dotnet-api-master
-          image: shweyasingh/i-shweta03-master:latest
+        - name: dotnet-api-develop
+          image: shweyasingh/i-shweta03-develop:latest
           ports:
             - name: http
               containerPort: 80

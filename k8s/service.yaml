@@ -6,7 +6,7 @@ metadata:
 spec:
   type: NodePort
   selector:
-    app: dotnet-api-master
+    app: dotnet-api-develop
   ports:
     - protocol: TCP
       nodePort: 30158
