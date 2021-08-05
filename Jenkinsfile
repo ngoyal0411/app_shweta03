@@ -41,7 +41,6 @@ pipeline {
 
                 echo 'Code build started'
                 bat 'dotnet build -c Release -o "DevOpsAssignment/app/build"'
-                bat 'dotnet test DevOpsAssignment.Tests\\DevOpsAssignment.Tests.csproj -l:trx;logFileName=TestOutput.xml'
             }
         }
 
