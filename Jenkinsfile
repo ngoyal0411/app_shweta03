@@ -40,7 +40,7 @@ pipeline {
                 bat 'dotnet clean'
 
                 echo 'Code build started'
-                bat 'dotnet build -c Release -o "DevOpsAssignment/app/build"'
+                bat 'dotnet build -c Release'
             }
         }
 
