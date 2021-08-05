@@ -69,7 +69,6 @@ pipeline {
         stage('Docker Image') {
             steps {
                 echo 'Docker image step'
-                bat 'dotnet publish -c Release'
                 bat "docker build -t i-${username}-${BRANCH_NAME} --no-cache -f Dockerfile ."
             }
         }
