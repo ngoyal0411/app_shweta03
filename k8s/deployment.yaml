@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dotnet-api-deployment-master
+  name: dotnet-api-deployment
   namespace: kubernetes-cluster-shweta03
   labels:
     app: dotnet-api
