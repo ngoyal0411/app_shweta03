@@ -41,6 +41,7 @@ pipeline {
 
                 echo 'Code build started'
                 bat 'dotnet build -c Release -o "DevOpsAssignment/app/build"'
+                bat 'dotnet test SampleAPI.Tests\\SampleAPI.Tests.csproj -l:trx;logFileName=SampleAPITestOutput.xml'
             }
         }
 
