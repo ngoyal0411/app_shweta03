@@ -4,6 +4,7 @@ pipeline {
     environment {
         scannerHome = tool name : 'sonar_scanner_dotnet'
         username = 'shweta03'
+        repository = 'shweyasingh/app-shweta03'
     }
 
     options {
@@ -70,11 +71,11 @@ pipeline {
         stage('Docker Image') {
             steps {
                 echo 'Docker image creation step'
-                bat "docker build -t i-${username}-${BRANCH_NAME} --no-cache -f Dockerfile ."
+                bat "docker build -t i-${username}-${BRANCH_NAME}:${BUILD_NUMBER} --no-cache -f Dockerfile ."
 
                 echo 'Docker image tagging step'
-                bat "docker tag i-${username}-${BRANCH_NAME} shweyasingh/app-${username}-${BRANCH_NAME}:${BUILD_NUMBER}"
-                bat "docker tag i-${username}-${BRANCH_NAME} shweyasingh/app-${username}-${BRANCH_NAME}:latest"
+                bat "docker tag i-${username}-${BRANCH_NAME}:${BUILD_NUMBER} ${repository}-${BRANCH_NAME}:${BUILD_NUMBER}"
+                bat "docker tag i-${username}-${BRANCH_NAME}:${BUILD_NUMBER} ${repository}-${BRANCH_NAME}:latest"
             }
         }
 
@@ -104,8 +105,8 @@ pipeline {
                     steps {
                         echo 'Push docker image to docker hub step'
                         withDockerRegistry([credentialsId: 'DockerHub', url: '']) {
-                            bat "docker push shweyasingh/app-${username}-${BRANCH_NAME}:${BUILD_NUMBER}"
-                            bat "docker push shweyasingh/app-${username}-${BRANCH_NAME}:latest"
+                            bat "docker push ${repository}-${BRANCH_NAME}:${BUILD_NUMBER}"
+                            bat "docker push ${repository}-${BRANCH_NAME}:latest"
                         }
                     }
                 }
@@ -115,7 +116,7 @@ pipeline {
         stage('Docker deployment') {
             steps {
                 echo 'Docker deployment step'
-                bat "docker run --name c-${username}-${BRANCH_NAME} -d -p ${docker_port}:80 shweyasingh/app-${username}-${BRANCH_NAME}:${BUILD_NUMBER}"
+                bat "docker run --name c-${username}-${BRANCH_NAME} -d -p ${docker_port}:80 ${repository}-${BRANCH_NAME}:latest"
             }
         }
 
