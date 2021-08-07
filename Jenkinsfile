@@ -90,7 +90,7 @@ pipeline {
                             } else {
                                 env.docker_port = 7300
                             }
-                            env.container_exist = bat(script:'docker ps --filter name=c-${username}-${BRANCH_NAME} | find ":${docker_port}"', returnStdout: true)
+                            env.container_exist = bat(script:"docker ps --filter name=c-${username}-${BRANCH_NAME} | findstr ${docker_port}", returnStdout: true)
 
                             echo "${container_exist}"
                             if (env.container_exist != null) {
