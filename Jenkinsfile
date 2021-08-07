@@ -16,9 +16,6 @@ pipeline {
     stages {
         stage('NuGet restore') {
             steps {
-                echo 'Code checkout step'
-                checkout scm
-
                 echo 'NuGet restore step'
                 bat 'dotnet restore'
             }
