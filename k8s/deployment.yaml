@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: dotnet-api-develop
-          image: shweyasingh/i-shweta03-develop:latest
+          image: shweyasingh/app-shweta03-develop:latest
           ports:
             - name: http
               containerPort: 80
