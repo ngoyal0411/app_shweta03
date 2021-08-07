@@ -90,12 +90,12 @@ pipeline {
                             } else {
                                 env.docker_port = 7300
                             }
+                            env.container_exist = bat(script:"docker ps --filter 'name=c-${username}-${BRANCH_NAME}' | find ':${docker_port}'", returnStdout: true)
 
-                            try {
+                            echo "${container_exist}"
+                            if (env.container_exist != null) {
+                                echo 'Stop and remove existing container'
                                 bat "docker stop c-${username}-${BRANCH_NAME} && docker rm c-${username}-${BRANCH_NAME}"
-                            }
-                            catch (exc) {
-                                echo 'No such container exist.'
                             }
                         }
                     }
