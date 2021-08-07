@@ -91,8 +91,8 @@ pipeline {
                                 env.docker_port = 7300
                             }
 
-                            env.container_id = bat(script:"docker ps -qf name=c-${username}-${BRANCH_NAME}", returnStdout: true)
-                            echo "${container_id}"
+                            env.container_id = bat(script:"docker ps -qf name=c-${username}-${BRANCH_NAME}", returnStdout: true).trim().readLines().drop(1).join('')
+                            echo env.container_id
 
                             if (env.container_id != null) {
                                 echo 'Stop and remove existing container'
