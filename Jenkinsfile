@@ -96,6 +96,8 @@ pipeline {
                             if (env.container_id != '') {
                                 echo 'Stop and remove existing container'
                                 bat "docker stop c-${username}-${BRANCH_NAME} && docker rm c-${username}-${BRANCH_NAME}"
+                            } else {
+                                echo 'No container exist with the specified name.'
                             }
                         }
                     }
