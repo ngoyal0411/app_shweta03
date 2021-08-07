@@ -91,11 +91,13 @@ pipeline {
                                 env.docker_port = 7300
                             }
 
-                            try {
+                            env.container_id = bat(script:"docker ps -qf name=c-${username}-${BRANCH_NAME}", returnStdout: true).trim().readLines().drop(1).join('')
+
+                            if (env.container_id != '') {
+                                echo 'Stop and remove existing container'
                                 bat "docker stop c-${username}-${BRANCH_NAME} && docker rm c-${username}-${BRANCH_NAME}"
-                            }
-                            catch (exc) {
-                                echo 'No such container exist.'
+                            } else {
+                                echo 'No container exist with the specified name.'
                             }
                         }
                     }
