@@ -33,7 +33,6 @@ pipeline {
             }
         }
 
-		/*
         stage('Code build') {
             steps {
                 echo 'Clean previous build'
@@ -43,7 +42,6 @@ pipeline {
                 bat 'dotnet build -c Release'
             }
         }
-		*/
 
         stage('Stop sonarQube analysis') {
             when {
